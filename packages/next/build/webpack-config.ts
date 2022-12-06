@@ -10,7 +10,6 @@ import {
   PAGES_DIR_ALIAS,
   ROOT_DIR_ALIAS,
   APP_DIR_ALIAS,
-  SERVER_RUNTIME,
   WEBPACK_LAYERS,
   RSC_MOD_REF_PROXY_ALIAS,
 } from '../lib/constants'
@@ -31,7 +30,7 @@ import {
   CompilerNameValues,
 } from '../shared/lib/constants'
 import { execOnce } from '../shared/lib/utils'
-import { NextConfigComplete } from '../server/config-shared'
+import { isEdgeRuntime, NextConfigComplete } from '../server/config-shared'
 import { finalizeEntrypoint } from './entries'
 import * as Log from './output/log'
 import { buildConfiguration } from './webpack/config'
@@ -620,7 +619,7 @@ export default async function getBaseWebpackConfig(
   const disableOptimizedLoading = true
 
   if (isClient) {
-    if (config.experimental.runtime === SERVER_RUNTIME.edge) {
+    if (isEdgeRuntime(config.experimental.runtime)) {
       Log.warn(
         'You are using the experimental Edge Runtime with `experimental.runtime`.'
       )

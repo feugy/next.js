@@ -65,7 +65,8 @@ export const ESLINT_PROMPT_VALUES = [
 ]
 
 export const SERVER_RUNTIME: Record<string, ServerRuntime> = {
-  edge: 'experimental-edge',
+  edge: 'edge',
+  experimentalEdge: 'experimental-edge',
   nodejs: 'nodejs',
 }
 

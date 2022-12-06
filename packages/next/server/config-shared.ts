@@ -9,6 +9,7 @@ import {
 import { ServerRuntime } from 'next/types'
 import { SubresourceIntegrityAlgorithm } from '../build/webpack/plugins/subresource-integrity-plugin'
 import { WEB_VITALS } from '../shared/lib/utils'
+import { SERVER_RUNTIME } from '../lib/constants'
 
 export type NextConfigComplete = Required<NextConfig> & {
   images: Required<ImageConfigComplete>
@@ -623,9 +624,17 @@ export async function normalizeConfig(phase: string, config: any) {
   return await config
 }
 
+export function isEdgeRuntime(value?: string): value is ServerRuntime {
+  return (
+    value === SERVER_RUNTIME.experimentalEdge || value === SERVER_RUNTIME.edge
+  )
+}
+
 export function isServerRuntime(value?: string): value is ServerRuntime {
   return (
-    value === undefined || value === 'nodejs' || value === 'experimental-edge'
+    value === undefined ||
+    value === SERVER_RUNTIME.nodejs ||
+    isEdgeRuntime(value)
   )
 }
 

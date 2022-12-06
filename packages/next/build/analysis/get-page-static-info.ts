@@ -1,4 +1,4 @@
-import { isServerRuntime } from '../../server/config-shared'
+import { isEdgeRuntime, isServerRuntime } from '../../server/config-shared'
 import type { NextConfig } from '../../server/config-shared'
 import type { Middleware, RouteHas } from '../../lib/load-custom-routes'
 import {
@@ -230,7 +230,7 @@ function getMiddlewareConfig(
 }
 
 let warnedAboutExperimentalEdgeApiFunctions = false
-function warnAboutExperimentalEdgeApiFunctions() {
+function warnAboutExperimentalEdge() {
   if (warnedAboutExperimentalEdgeApiFunctions) {
     return
   }
@@ -326,15 +326,14 @@ export async function getPageStaticInfo(params: {
 
     const requiresServerRuntime = ssr || ssg || pageType === 'app'
 
-    resolvedRuntime =
-      SERVER_RUNTIME.edge === resolvedRuntime
-        ? SERVER_RUNTIME.edge
-        : requiresServerRuntime
-        ? resolvedRuntime || nextConfig.experimental?.runtime
-        : undefined
+    resolvedRuntime = isEdgeRuntime(resolvedRuntime)
+      ? resolvedRuntime
+      : requiresServerRuntime
+      ? resolvedRuntime || nextConfig.experimental?.runtime
+      : undefined
 
-    if (resolvedRuntime === SERVER_RUNTIME.edge) {
-      warnAboutExperimentalEdgeApiFunctions()
+    if (resolvedRuntime === SERVER_RUNTIME.experimentalEdge) {
+      warnAboutExperimentalEdge()
     }
 
     const middlewareConfig = getMiddlewareConfig(

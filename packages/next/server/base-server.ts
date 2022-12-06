@@ -8,6 +8,7 @@ import type { RouteMatch } from '../shared/lib/router/utils/route-matcher'
 import type { MiddlewareRouteMatch } from '../shared/lib/router/utils/middleware-route-matcher'
 import type { Params } from '../shared/lib/router/utils/route-matcher'
 import type { NextConfig, NextConfigComplete } from './config-shared'
+import { isEdgeRuntime } from './config-shared'
 import type { NextParsedUrlQuery, NextUrlWithParsedQuery } from './request-meta'
 import type { ParsedUrlQuery } from 'querystring'
 import type { RenderOpts, RenderOptsPartial } from './render'
@@ -1080,7 +1081,7 @@ export default abstract class Server<ServerOptions extends Options = Options> {
         }
         // strip header so we generate HTML still
         if (
-          opts.runtime !== 'experimental-edge' ||
+          !isEdgeRuntime(opts.runtime) ||
           (this.serverOptions as any).webServerConfig
         ) {
           for (const param of FLIGHT_PARAMETERS) {
@@ -1293,7 +1294,7 @@ export default abstract class Server<ServerOptions extends Options = Options> {
     })
     if (
       this.nextConfig.experimental.fetchCache &&
-      (opts.runtime !== 'experimental-edge' ||
+      (!isEdgeRuntime(opts.runtime) ||
         (this.serverOptions as any).webServerConfig)
     ) {
       delete req.headers[FETCH_CACHE_HEADER]

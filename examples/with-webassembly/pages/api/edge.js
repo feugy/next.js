@@ -8,4 +8,4 @@ export default async function edgeExample() {
   return new Response(`got: ${number}`)
 }
 
-export const config = { runtime: 'experimental-edge' }
+export const config = { runtime: 'edge' }

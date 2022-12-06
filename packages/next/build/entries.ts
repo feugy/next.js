@@ -31,6 +31,7 @@ import {
   EDGE_RUNTIME_WEBPACK,
 } from '../shared/lib/constants'
 import { __ApiPreviewProps } from '../server/api-utils'
+import { isEdgeRuntime } from '../server/config-shared'
 import { warn } from './output/log'
 import {
   isMiddlewareFile,
@@ -258,7 +259,7 @@ export async function runDependingOnPageType<T>(params: {
     return
   }
   if (params.page.match(API_ROUTE)) {
-    if (params.pageRuntime === SERVER_RUNTIME.edge) {
+    if (isEdgeRuntime(params.pageRuntime)) {
       await params.onEdgeServer()
       return
     }
@@ -279,7 +280,7 @@ export async function runDependingOnPageType<T>(params: {
     await Promise.all([params.onClient(), params.onServer()])
     return
   }
-  if (params.pageRuntime === SERVER_RUNTIME.edge) {
+  if (params.pageRuntime === SERVER_RUNTIME.experimentalEdge) {
     await Promise.all([params.onClient(), params.onEdgeServer()])
     return
   }
